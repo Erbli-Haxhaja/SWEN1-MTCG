@@ -1,4 +1,5 @@
 import Database.DatabaseInitializer;
+import HTTPServer.Handlers.PackageHandler;
 import HTTPServer.Handlers.SessionHandler;
 import HTTPServer.Handlers.UserHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -15,8 +16,11 @@ public class HTTPServer {
         String createUserTableQuery = "CREATE TABLE users  ("
                 + "username VARCHAR(255) NOT NULL PRIMARY KEY,"
                 + "passwordd VARCHAR(255) NOT NULL)";
-        //String createPackagesTableQuery = "";
-        //dataBase.createTable(createUserTableQuery);
+        String createPackagesTableQuery = "CREATE TABLE packages  ("
+                + "id VARCHAR(255) NOT NULL PRIMARY KEY,"
+                + "name VARCHAR(255) NOT NULL,"
+                + "damage FLOAT NOT NULL)";
+        //dataBase.createTable(createPackagesTableQuery);
 
         // Create a server on port 10001
         HttpServer server = HttpServer.create(new InetSocketAddress(10001), 0);
@@ -26,6 +30,9 @@ public class HTTPServer {
 
         // Create a context for the "/sessions" path and set a handler
         server.createContext("/sessions", new SessionHandler());
+
+        // Create a context for the "/packages" path and set a handler
+        server.createContext("/packages", new PackageHandler());
 
         // Set the executor to null for simplicity (default executor is used)
         server.setExecutor(null);

@@ -5,8 +5,13 @@
       <root url="jar://$PROJECT_DIR$/lib/jackson/jackson-annotations-2.16.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jackson/jackson-core-2.16.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jackson/jackson-databind-2.16.0.jar!/" />
+      <root url="file://$PROJECT_DIR$/lib/commons-lang3-3.14.0" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/lib/commons-lang3-3.14.0" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/lib/commons-lang3-3.14.0" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/commons-lang3-3.14.0" recursive="false" type="SOURCES" />
   </library>
 </component>

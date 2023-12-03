@@ -25,13 +25,13 @@ public class DatabaseInitializer {
         }
     }
 
-    public void insert(String insertUserQuery) {
+    public void insert(String query) {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement statement = connection.createStatement()) {
 
-            statement.executeUpdate(insertUserQuery);
+            statement.executeUpdate(query);
 
-            System.out.println("Sample user inserted successfully.");
+            System.out.println("Insertion successfull.");
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -14,7 +14,6 @@ public class User {
         this.username = username;
         this.password = password;
     }
-
     public void login(){}
     public void register(){}
     public void acquirePackage(){}
@@ -22,6 +21,10 @@ public class User {
     public void battle(){}
     public void compareStats(){}
     public void editProfile(){}
+
+    public void addToStack(Card card) {
+        this.stack.add(card);
+    }
 
     public String getPassword() {
         return password;
@@ -69,6 +72,12 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void unconfiguredDeck() {
+        for (Card card : this.stack) {
+            this.stack.add(card);
+        }
     }
 
 }

@@ -1,16 +1,21 @@
 package HTTPServer.Handlers;
 import Database.DatabaseInitializer;
+import GameClasses.Gameworld;
+import GameClasses.User;
 import HTTPServer.Utils.UserJsonUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedList;
 import java.util.Map;
 
 
 // Custom handler for the "/user" path
 public class UserHandler implements HttpHandler {
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -48,15 +53,20 @@ public class UserHandler implements HttpHandler {
                     break;
                 }
             }
-            System.out.println("\nUsername: " + username);
-            System.out.println("\nPassword: " + password);
+            //System.out.println("Username: " + username);
+            //System.out.println("Password: " + password);
             //connection and insertion into dataBase
             try {
-                DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCard", "postgres", "erblienes2A");
-                String insertUserQuery = "INSERT INTO users (username, passwordd) VALUES "
-                        + "('" + username + "', '" + password + "')";
-                database.insert(insertUserQuery);
-                response.append("\n").append("Register successful!");
+                DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
+                if(database.userExists(username)) {
+                    response.append("User already exists!");
+                }
+                else {
+                    String insertUserQuery = "INSERT INTO users (username, passwordd) VALUES "
+                            + "('" + username + "', '" + password + "')";
+                    database.insert(insertUserQuery);
+                    response.append("\n").append("Register successful!");
+                }
             } catch (Exception ex) {
                 response.append("\n").append("Register unsuccessful!");
                 System.out.println("Database Error: " + ex);
@@ -69,7 +79,6 @@ public class UserHandler implements HttpHandler {
             exchange.close();
         }
     }
-
 
     // Helper method to split query parameters
     private Map<String, String> splitQuery(String query) {

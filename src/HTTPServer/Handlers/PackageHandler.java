@@ -1,6 +1,7 @@
 package HTTPServer.Handlers;
 
 import Database.DatabaseInitializer;
+import HTTPServer.Utils.ExtractUsername;
 import HTTPServer.Utils.PackageJsonUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -10,8 +11,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 // Custom handler for the "/packages" path
@@ -20,50 +25,81 @@ public class PackageHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
 
         if ("POST".equals(exchange.getRequestMethod()) || "GET".equals(exchange.getRequestMethod())) {
-            // Get the input stream from the request
-            InputStream requestBody = exchange.getRequestBody();
+            // Get the headers from the request
+            Map<String, List<String>> headers = exchange.getRequestHeaders();
 
-            // Read the input stream and convert it to a string
-            String jsonData = new String(requestBody.readAllBytes(), StandardCharsets.UTF_8);
+            //Iterate through the Headers and get the token
+            String token = "";
+            for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
+                //System.out.println(entry.getKey() + ": " + entry.getValue().toString());
+                if(entry.getKey().equals("Authorization")) {
+                    token = entry.getValue().toString();
+                }
+            }
 
-            // Print the JSON data
-            System.out.println("Received JSON data:");
-            System.out.println(jsonData);
-
-            // Get the query parameters from the json string
-            List<Triple<String, String, Double>> queryParams = splitQuery(jsonData);
+            StringBuilder response = new StringBuilder("");
             // Get the output stream to write the response
             OutputStream os = exchange.getResponseBody();
-
+            // Get the input stream from the request
+            InputStream requestBody = exchange.getRequestBody();
             // Set the response headers
             exchange.getResponseHeaders().set("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, 0);
 
-            // Write the response body and include the get parameters in the response
-            StringBuilder response = new StringBuilder("");
-            response.append(jsonData);
+            String username = ExtractUsername.extract(token);
+            System.out.println("Username: " + username);
+            boolean insertionStatus = false;
+            if(username.equals("admin")) {
+                // Read the input stream and convert it to a string
+                String jsonData = new String(requestBody.readAllBytes(), StandardCharsets.UTF_8);
 
-            for (Triple<String, String, Double> triplet : queryParams) {
-                // Access triplet components
-                String id = triplet.getLeft();
-                String name = triplet.getMiddle();
-                Double damage = triplet.getRight();
+                // Print the JSON data
+                System.out.println("Received JSON data:");
+                System.out.println(jsonData);
 
-                //connection and insertion into dataBase
-                try {
-                    DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCard", "postgres", "erblienes2A");
-                    String insertPackageQuery = "INSERT INTO packages (id, name, damage) VALUES "
-                            + "('" + id + "', '" + name + "', " + damage + ")";
-                    System.out.println("Insert Query: " + insertPackageQuery);
-                    System.out.println("--------");
-                    database.insert(insertPackageQuery);
-                    response.append("\n").append("Package Insertion successful!");
-                } catch (Exception ex) {
-                    response.append("\n").append("Package Insertion unsuccessful!");
-                    System.out.println("Database Error: " + ex);
+                // Get the query parameters from the json string
+                List<Triple<String, String, Double>> queryParams = splitQuery(jsonData);
+
+                //response.append(jsonData);
+                DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
+                int lastid = database.getLastId();
+                //System.out.println("Last id is " + lastid);
+                lastid++;
+                for (Triple<String, String, Double> triplet : queryParams) {
+                    // Access triplet components
+                    String id = triplet.getLeft();
+                    String name = triplet.getMiddle();
+                    Double damage = triplet.getRight();
+                    String elementType = "";
+                    if(name.endsWith("spell")) {
+                        elementType = "spell";
+                    }
+                    else {
+                        elementType = "monster";
+                    }
+
+                    //connection and insertion into dataBase
+                    try {
+                        String insertPackageQuery = "INSERT INTO packages (packageid, id, name, damage, elementtype) VALUES "
+                                + "('" + lastid + "', '" + id + "', '" + name + "', " + damage + ", '" + elementType + "')";
+                        System.out.println("Insert Query: " + insertPackageQuery);
+                        System.out.println("--------");
+                        database.insert(insertPackageQuery);
+                        insertionStatus = true;
+                    } catch (Exception ex) {
+                        insertionStatus = false;
+                        System.out.println("Database Error: " + ex);
+                    }
                 }
-
             }
+            else {
+                response.append("Only admin can add packages!");
+            }
+
+            if(insertionStatus)
+                response.append("\n").append("Package Insertion successful!");
+            else
+                response.append("\n").append("Package Insertion unsuccessful!");
 
             os.write(response.toString().getBytes());
 

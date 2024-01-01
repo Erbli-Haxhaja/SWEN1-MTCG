@@ -1,6 +1,8 @@
 package HTTPServer.Handlers;
 
 import Database.DatabaseInitializer;
+import GameClasses.Gameworld;
+import GameClasses.User;
 import HTTPServer.Utils.UserJsonUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -54,10 +56,11 @@ public class SessionHandler implements HttpHandler {
             }
             //checks if there is an entry with the given username and password
             try {
-                DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCard", "postgres", "erblienes2A");
+                DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
                 boolean login = database.authenticateUser(username, password);
                 if (login) {
                     response.append("\n").append("Login successful!");
+                    Gameworld.users.add(createUser(username, password));
                 } else {
                     response.append("\n").append("Login unsuccessful!").append("\nCheck your credentials!");
                 }
@@ -74,6 +77,11 @@ public class SessionHandler implements HttpHandler {
             os.close();
             exchange.close();
         }
+    }
+
+    User createUser(String username, String password) {
+        User user = new User(username, password);
+        return user;
     }
 
     // Helper method to split query parameters

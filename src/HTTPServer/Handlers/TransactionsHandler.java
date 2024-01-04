@@ -57,7 +57,7 @@ public class TransactionsHandler implements HttpHandler {
                         // First check if the user has enough money to buy the package
                         if(Gameworld.users.get(i).getCoins() >= 5) {
                             List<List<Object>> packageData = new ArrayList<>();
-                            packageData = database.getPackage(database.getFirstId());
+                            packageData = database.getPackage(Gameworld.packageFirstId);
                             if(packageData != null) {
                                 // add the packages
                                 for (List<Object> entry : packageData) {
@@ -68,14 +68,17 @@ public class TransactionsHandler implements HttpHandler {
                                     System.out.println("ElementType: " + entry.get(3));
                                     System.out.println("");
                                     // Create cards with the data Name (elementType, damage)
-                                    Card card =  new Card(entry.get(1).toString(), Integer.parseInt(entry.get(2).toString()), entry.get(3).toString());
+                                    Card card =  new Card(entry.get(0).toString(), entry.get(1).toString(), Integer.parseInt(entry.get(2).toString()), entry.get(3).toString());
                                     // Add the created card to the user's stack
                                     Gameworld.users.get(i).addToStack(card);
+
+                                    // Insert the card into the userstack table
+                                    String query = "INSERT INTO userstack VALUES ('" + Gameworld.users.get(i).getUsername() + "', '" + entry.get(0) + "')";
+                                    database.insert(query);
                                 }
                                 // Set the response
-                                response = "Package accuired!";
-                                // Delete the acquired packages
-                                database.deletePackage(database.getFirstId());
+                                response = "Package" + Gameworld.packageFirstId + " accuired for " + username + "!";
+                                Gameworld.packageFirstId++;
                                 // Remove 5 coins from the user
                                 Gameworld.users.get(i).setCoins(Gameworld.users.get(i).getCoins() - 5);
                                 System.out.println(username + " has " + Gameworld.users.get(i).getCoins() + " coins left!");
@@ -87,7 +90,6 @@ public class TransactionsHandler implements HttpHandler {
                         else {
                             response = "No money!";
                         }
-
                     }
                 }
             }

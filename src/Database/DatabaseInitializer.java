@@ -16,19 +16,6 @@ public class DatabaseInitializer {
         this.PASSWORD = password;
     }
 
-    public void createTable(String tableQuery) {
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-             Statement statement = connection.createStatement()) {
-
-             statement.executeUpdate(tableQuery);
-
-             System.out.println("Table created successfully.");
-
-        } catch (SQLException e) {
-            System.out.println("Connection refused: " + e);
-        }
-    }
-
     public void insert(String query) {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement statement = connection.createStatement()) {
@@ -41,39 +28,6 @@ public class DatabaseInitializer {
             e.printStackTrace();
         }
     }
-    //Get the id of the last added package
-    public int getLastId() {
-        int id = 0;
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
-            String sql = "SELECT packageid FROM packages ORDER BY packageid DESC LIMIT 1";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                ResultSet resultSet = statement.executeQuery();
-                if (resultSet.next()) {
-                    id = resultSet.getInt("packageid");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately in a real-world application
-        }
-
-        return id;
-    }
-    public int getFirstId() {
-        int id = 0;
-        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
-            String sql = "SELECT packageid FROM packages ORDER BY packageid ASC LIMIT 1";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                ResultSet resultSet = statement.executeQuery();
-                if (resultSet.next()) {
-                    id = resultSet.getInt("packageid");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Handle the exception appropriately in a real-world application
-        }
-
-        return id;
-    }
 
     //returns packages with a certain id as a list of objects
     public List<List<Object>> getPackage(int id) {
@@ -84,11 +38,7 @@ public class DatabaseInitializer {
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
 
-                //check if maybe there are no packages left to add
-                if(!resultSet.next()) {
-                    resultList=null;
-                }
-                else {
+                if(resultSet.isBeforeFirst()) {
                     while(resultSet.next()) {
                         String idd = resultSet.getString("id");
                         String name = resultSet.getString("name");
@@ -105,6 +55,10 @@ public class DatabaseInitializer {
                         resultList.add(entry);
                     }
                 }
+                else {
+                    resultList = null;
+                }
+
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Handle the exception appropriately in a real-world application
@@ -113,12 +67,11 @@ public class DatabaseInitializer {
         return resultList;
     }
 
-    //deletes packages
-    public void deletePackage(int id) {
+    //deletes from table
+    public void deleteFromTable(String tableName) {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
-            String sql = "DELETE FROM packages where packageid = ?";
+            String sql = "DELETE FROM " + tableName;
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setInt(1, id);
                 statement.executeUpdate();
             }
         } catch (SQLException e) {

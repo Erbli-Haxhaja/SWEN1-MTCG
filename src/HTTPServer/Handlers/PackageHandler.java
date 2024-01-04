@@ -1,6 +1,7 @@
 package HTTPServer.Handlers;
 
 import Database.DatabaseInitializer;
+import GameClasses.Gameworld;
 import HTTPServer.Utils.ExtractUsername;
 import HTTPServer.Utils.PackageJsonUtil;
 import com.sun.net.httpserver.HttpExchange;
@@ -62,16 +63,15 @@ public class PackageHandler implements HttpHandler {
 
                 //response.append(jsonData);
                 DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
-                int lastid = database.getLastId();
-                //System.out.println("Last id is " + lastid);
-                lastid++;
+                int lastid = Gameworld.addPackageLastId;
+                Gameworld.addPackageLastId++;
                 for (Triple<String, String, Double> triplet : queryParams) {
                     // Access triplet components
                     String id = triplet.getLeft();
                     String name = triplet.getMiddle();
                     Double damage = triplet.getRight();
                     String elementType = "";
-                    if(name.endsWith("spell")) {
+                    if(name.endsWith("Spell")) {
                         elementType = "spell";
                     }
                     else {

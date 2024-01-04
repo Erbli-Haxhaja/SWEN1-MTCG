@@ -5,9 +5,10 @@ public class User {
     private String username;
     private String password;
     private int elo = 100;
+    private boolean configrured = false;
 
     private int coins = 20;
-    private ArrayList<Card> deck = new ArrayList<>(4);
+    private ArrayList<Card> deck = new ArrayList<>();
     private ArrayList<Card> stack = new ArrayList<>();
 
     public User(String username, String password) {
@@ -50,6 +51,14 @@ public class User {
         this.coins = coins;
     }
 
+    public boolean isConfigrured() {
+        return configrured;
+    }
+
+    public void setConfigrured(boolean configrured) {
+        this.configrured = configrured;
+    }
+
     public ArrayList<Card> getDeck() {
         return deck;
     }
@@ -75,8 +84,13 @@ public class User {
     }
 
     public void unconfiguredDeck() {
+        int c = 0;
         for (Card card : this.stack) {
-            this.stack.add(card);
+            if(c==4) {
+                break;
+            }
+            this.deck.add(card);
+            c++;
         }
     }
 

@@ -9,20 +9,14 @@ import java.util.*;
 
 public class HTTPServer {
 
-    public static List<User> users = new ArrayList<User>();
-
     public static void main(String[] args) throws IOException {
         //connect to the database created in pgadmin4
         DatabaseInitializer dataBase = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
-        //create tables
-        String createUserTableQuery = "CREATE TABLE users  ("
-                + "username VARCHAR(255) NOT NULL PRIMARY KEY,"
-                + "passwordd VARCHAR(255) NOT NULL)";
-        String createPackagesTableQuery = "CREATE TABLE packages  ("
-                + "id VARCHAR(255) NOT NULL PRIMARY KEY,"
-                + "name VARCHAR(255) NOT NULL,"
-                + "damage FLOAT NOT NULL)";
-        //dataBase.createTable(createPackagesTableQuery);
+        // First clear the tables
+        dataBase.deleteFromTable("userdeck");
+        dataBase.deleteFromTable("userstack");
+        dataBase.deleteFromTable("packages");
+        dataBase.deleteFromTable("users");
 
         // Create a server on port 10001
         HttpServer server = HttpServer.create(new InetSocketAddress(10001), 0);
@@ -38,6 +32,13 @@ public class HTTPServer {
 
         // Create a context for the "/transactions/packages" path and set a handler for PACKAGE ACQUIRE
         server.createContext("/transactions/packages", new TransactionsHandler());
+
+        // Create a context for the "/card" path and set a handler for SHOW CARDS
+        server.createContext("/card", new CardsHandler());
+
+        // Create a context for the "/deck" path and set a handler for DECK SHOW and CONFIGURATION
+        server.createContext("/deck", new DeckHandler());
+
 
         // Set the executor to null for simplicity (default executor is used)
         server.setExecutor(null);

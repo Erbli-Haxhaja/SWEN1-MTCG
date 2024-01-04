@@ -5,7 +5,10 @@ public class Card {
     private int damage;
     private String elementType;
 
-    public Card(String name, int damage, String elementType) {
+    private String id;
+
+    public Card(String id, String name, int damage, String elementType) {
+        this.id = id;
         this.name = name;
         this.damage = damage;
         this.elementType = elementType;
@@ -34,5 +37,13 @@ public class Card {
 
     public void setElementType(String elementType) {
         this.elementType = elementType;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

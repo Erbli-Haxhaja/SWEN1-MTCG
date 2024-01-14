@@ -1,8 +1,10 @@
 package HTTPServer.Handlers;
+
 import Database.DatabaseInitializer;
 import HTTPServer.Utils.ExtractUsername;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,7 +14,7 @@ import java.util.Map;
 
 
 // Custom handler for the "/transactions/packages" path
-public class ScoreboardHandler implements HttpHandler {
+public class StatsHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
@@ -40,17 +42,10 @@ public class ScoreboardHandler implements HttpHandler {
                 String username = ExtractUsername.extract(token);
                 System.out.println("Username: " + username);
 
-                response.append("User | ELO Points:");
-                List<HashMap<String, String>> data = database.getDataFromScoreboard();
+                response.append(username + " stats: ");
+                List<String> data = database.getDataFromStats(username);
                 // Send the Scoreboard data to the user
-                for (HashMap<String, String> map : data) {
-                    for (Map.Entry<String, String> entry : map.entrySet()) {
-                        String name = entry.getKey();
-                        String elo = entry.getValue();
-
-                        response.append("\n" + name + " | " + elo);
-                    }
-                }
+                response.append("\nElo: " + data.get(1) + " | " + " Wins: " + data.get(2) + " | " + " Draws: " + data.get(3) + " | " + " Losses: " + data.get(3));
             }
             else {
                 response.append("Invalid! No token!");

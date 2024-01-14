@@ -66,7 +66,7 @@ public class DeckHandler implements HttpHandler {
                         deck = Gameworld.users.get(i).getDeck();
                         //append all the cards to the response
                         for (Card card : deck) {
-                            response.append("\nName: " + card.getName() + " | Damage: " + card.getDamage() + " | Element Type: " + card.getElementType());
+                            response.append("\nName: " + card.getName() + " | Damage: " + card.getDamage() + " | Card Type: " + card.getCardType() + " | Element Type: " + card.getElementType());
                         }
                         Gameworld.users.get(i).setConfigrured(true);
                     }

@@ -70,18 +70,31 @@ public class PackageHandler implements HttpHandler {
                     String id = triplet.getLeft();
                     String name = triplet.getMiddle();
                     Double damage = triplet.getRight();
+                    String cardType = "";
                     String elementType = "";
                     if(name.endsWith("Spell")) {
-                        elementType = "spell";
+                        cardType = "spell";
+                    }
+                    else if(name.endsWith("monster")){
+                        cardType = "monster";
                     }
                     else {
-                        elementType = "monster";
+                        cardType = "monster";
+                    }
+
+                    if(name.startsWith("Water")) {
+                        elementType = "water";
+                    } else if (name.startsWith("Fire")) {
+                        elementType = "fire";
+                    }
+                    else {
+                        elementType = "normal";
                     }
 
                     //connection and insertion into dataBase
                     try {
-                        String insertPackageQuery = "INSERT INTO packages (packageid, id, name, damage, elementtype) VALUES "
-                                + "('" + lastid + "', '" + id + "', '" + name + "', " + damage + ", '" + elementType + "')";
+                        String insertPackageQuery = "INSERT INTO cards (packageid, id, name, damage, elementtype, cardtype) VALUES "
+                                + "('" + lastid + "', '" + id + "', '" + name + "', " + damage + ", '" + elementType + "', '" + cardType + "')";
                         System.out.println("Insert Query: " + insertPackageQuery);
                         System.out.println("--------");
                         database.insert(insertPackageQuery);

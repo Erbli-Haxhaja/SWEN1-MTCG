@@ -87,14 +87,22 @@ public class UserHandler implements HttpHandler {
                 else {
                     String insertUserQuery = "INSERT INTO users (username, passwordd) VALUES "
                             + "('" + username + "', '" + password + "')";
-                    String insertScoreboardQuery = "INSERT INTO scoreboard VALUES "
-                            + "('" + username + "', '" + 100 + "')";
-
                     // Insert the user
                     database.insert(insertUserQuery);
 
-                    // Insert the user with 100 ELO points to the scoreboard
-                    database.insert(insertScoreboardQuery);
+                    if(!username.equals("admin")) {
+                        String insertScoreboardQuery = "INSERT INTO scoreboard VALUES "
+                                + "('" + username + "', '" + 100 + "')";
+                        String insertStatsQuery = "INSERT INTO stats VALUES "
+                                + "('" + username + "', '" + 100 + "', '" + 0 + "', '" + 0 + "', '" + 0 +"')";
+
+                        // Insert the user with 100 ELO points to the scoreboard
+                        database.insert(insertScoreboardQuery);
+
+                        // Insert the user with 100 ELO points and 0 wins/draws/losses
+                        database.insert(insertStatsQuery);
+                    }
+
                     response.append("\n").append("Register successful!");
                 }
             } catch (Exception ex) {

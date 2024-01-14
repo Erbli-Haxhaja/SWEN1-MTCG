@@ -59,7 +59,7 @@ public class CardsHandler implements HttpHandler {
                         stack = Gameworld.users.get(i).getStack();
                         //append all the cards to the response
                         for (Card card : stack) {
-                            response.append("\nName: " + card.getName() + " | Damage: " + card.getDamage() + " | Element Type: " + card.getElementType());
+                            response.append("\nName: " + card.getName() + " | Damage: " + card.getDamage() + " | Card Type: " + card.getCardType() + " | Element Type: " + card.getElementType());
                         }
                     }
                 }

@@ -2,6 +2,7 @@ package Database;
 import org.apache.commons.lang3.tuple.Triple;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,8 +23,6 @@ public class DatabaseInitializer {
 
             statement.executeUpdate(query);
 
-            System.out.println("Insertion successfull.");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -33,7 +32,7 @@ public class DatabaseInitializer {
     public List<List<Object>> getPackage(int id) {
         List<List<Object>> resultList = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
-            String sql = "SELECT id, name, damage, elementtype FROM packages where packageid = ?";
+            String sql = "SELECT id, name, damage, cardtype, elementtype FROM cards where packageid = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
@@ -43,7 +42,8 @@ public class DatabaseInitializer {
                         String idd = resultSet.getString("id");
                         String name = resultSet.getString("name");
                         int damage = resultSet.getInt("damage");
-                        String elementtype = resultSet.getString("elementtype");
+                        String cardType = resultSet.getString("cardtype");
+                        String elementType = resultSet.getString("elementtype");
 
                         // Create an object with the extracted values
                         // and add it to the resultList
@@ -51,7 +51,8 @@ public class DatabaseInitializer {
                         entry.add(idd);
                         entry.add(name);
                         entry.add(damage);
-                        entry.add(elementtype);
+                        entry.add(cardType);
+                        entry.add(elementType);
                         resultList.add(entry);
                     }
                 }
@@ -95,13 +96,12 @@ public class DatabaseInitializer {
         return resultList;
     }
 
-    // Returns a List of the Stats of the given user
-    public List<String> getDataFromScoreboard(String username) {
-        List<String> resultList = new ArrayList<>();
+    // Returns a List of the Scoreboard
+    public List<HashMap<String, String>> getDataFromScoreboard() {
+        List<HashMap<String, String>> resultList = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
-            String sql = "SELECT * FROM scoreboard where username = ?";
+            String sql = "SELECT * FROM scoreboard ORDER BY elo DESC";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, username);
                 ResultSet resultSet = statement.executeQuery();
                 while(resultSet.next()) {
                     // Extract all the columns
@@ -109,8 +109,41 @@ public class DatabaseInitializer {
                     int elo = resultSet.getInt("elo");
 
                     // Add the columns to the List
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(name, Integer.toString(elo));
+                    resultList.add(map);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately in a real-world application
+        }
+
+        return resultList;
+    }
+
+    // Returns a List of the Stats for the
+    public List<String> getDataFromStats(String username) {
+        List<String> resultList = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            String sql = "SELECT * FROM stats where username = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
+                ResultSet resultSet = statement.executeQuery();
+                while(resultSet.next()) {
+                    // Extract all the columns
+                    String name = resultSet.getString("username");
+                    int elo = resultSet.getInt("elo");
+                    int wins = resultSet.getInt("wins");
+                    int draws = resultSet.getInt("draws");
+                    int losses = resultSet.getInt("losses");
+
+                    // Add the columns to the List
                     resultList.add(name);
                     resultList.add(Integer.toString(elo));
+                    resultList.add(Integer.toString(wins));
+                    resultList.add(Integer.toString(draws));
+                    resultList.add(Integer.toString(losses));
                 }
 
             }

@@ -4,13 +4,14 @@ public class Card {
     private String name;
     private int damage;
     private String elementType;
-
+    private String cardType;
     private String id;
 
-    public Card(String id, String name, int damage, String elementType) {
+    public Card(String id, String name, int damage, String cardType, String elementType) {
         this.id = id;
         this.name = name;
         this.damage = damage;
+        this.cardType = cardType;
         this.elementType = elementType;
     }
 
@@ -45,5 +46,13 @@ public class Card {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(String cardType) {
+        this.cardType = cardType;
     }
 }

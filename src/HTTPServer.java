@@ -14,9 +14,10 @@ public class HTTPServer {
         DatabaseInitializer dataBase = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
         // First clear the tables
         dataBase.deleteFromTable("scoreboard");
+        dataBase.deleteFromTable("stats");
         dataBase.deleteFromTable("userdeck");
         dataBase.deleteFromTable("userstack");
-        dataBase.deleteFromTable("packages");
+        dataBase.deleteFromTable("cards");
         dataBase.deleteFromTable("users");
 
         // Create a server on port 10001
@@ -42,6 +43,9 @@ public class HTTPServer {
 
         // Create a context for the "/scoreboard" path and set a handler for scoreboard
         server.createContext("/scoreboard", new ScoreboardHandler());
+
+        // Create a context for the "/stats" path and set a handler for scoreboard
+        server.createContext("/stats", new StatsHandler());
 
         // Set the executor to null for simplicity (default executor is used)
         server.setExecutor(null);

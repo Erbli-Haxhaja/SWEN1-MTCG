@@ -65,10 +65,11 @@ public class TransactionsHandler implements HttpHandler {
                                     System.out.println("ID: " + entry.get(0));
                                     System.out.println("Name: " + entry.get(1));
                                     System.out.println("Damage: " + entry.get(2));
-                                    System.out.println("ElementType: " + entry.get(3));
+                                    System.out.println("CardType: " + entry.get(3));
+                                    System.out.println("Elementtype: " + entry.get(4));
                                     System.out.println("");
                                     // Create cards with the data Name (elementType, damage)
-                                    Card card =  new Card(entry.get(0).toString(), entry.get(1).toString(), Integer.parseInt(entry.get(2).toString()), entry.get(3).toString());
+                                    Card card =  new Card(entry.get(0).toString(), entry.get(1).toString(), Integer.parseInt(entry.get(2).toString()), entry.get(3).toString(), entry.get(4).toString());
                                     // Add the created card to the user's stack
                                     Gameworld.users.get(i).addToStack(card);
 
@@ -78,6 +79,7 @@ public class TransactionsHandler implements HttpHandler {
                                 }
                                 // Set the response
                                 response = "Package" + Gameworld.packageFirstId + " accuired for " + username + "!";
+                                // Add 1 to the packageFirstId Variable, so that the next package acquire the next package is acquired
                                 Gameworld.packageFirstId++;
                                 // Remove 5 coins from the user
                                 Gameworld.users.get(i).setCoins(Gameworld.users.get(i).getCoins() - 5);

@@ -67,6 +67,60 @@ public class DatabaseInitializer {
         return resultList;
     }
 
+    // Returns a List of the data from the given user
+    public List<String> getDataFromUserTable(String username) {
+        List<String> resultList = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            String sql = "SELECT name, bio, image FROM users where username = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
+                ResultSet resultSet = statement.executeQuery();
+                while(resultSet.next()) {
+                    // Extract all the columns
+                    String name = resultSet.getString("name");
+                    String bio = resultSet.getString("bio");
+                    String image = resultSet.getString("image");
+
+                    // Add the columns to the List
+                    resultList.add(name);
+                    resultList.add(bio);
+                    resultList.add(image);
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately in a real-world application
+        }
+
+        return resultList;
+    }
+
+    // Returns a List of the Stats of the given user
+    public List<String> getDataFromScoreboard(String username) {
+        List<String> resultList = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
+            String sql = "SELECT * FROM scoreboard where username = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, username);
+                ResultSet resultSet = statement.executeQuery();
+                while(resultSet.next()) {
+                    // Extract all the columns
+                    String name = resultSet.getString("username");
+                    int elo = resultSet.getInt("elo");
+
+                    // Add the columns to the List
+                    resultList.add(name);
+                    resultList.add(Integer.toString(elo));
+                }
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately in a real-world application
+        }
+
+        return resultList;
+    }
+
     //deletes from table
     public void deleteFromTable(String tableName) {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {

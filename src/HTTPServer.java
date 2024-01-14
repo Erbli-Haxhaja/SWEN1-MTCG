@@ -13,6 +13,7 @@ public class HTTPServer {
         //connect to the database created in pgadmin4
         DatabaseInitializer dataBase = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
         // First clear the tables
+        dataBase.deleteFromTable("scoreboard");
         dataBase.deleteFromTable("userdeck");
         dataBase.deleteFromTable("userstack");
         dataBase.deleteFromTable("packages");
@@ -39,6 +40,8 @@ public class HTTPServer {
         // Create a context for the "/deck" path and set a handler for DECK SHOW and CONFIGURATION
         server.createContext("/deck", new DeckHandler());
 
+        // Create a context for the "/scoreboard" path and set a handler for scoreboard
+        server.createContext("/scoreboard", new ScoreboardHandler());
 
         // Set the executor to null for simplicity (default executor is used)
         server.setExecutor(null);

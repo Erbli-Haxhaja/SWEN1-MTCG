@@ -1,7 +1,7 @@
 package GameClasses;
 import java.util.HashMap;
 
-public class Scoreboard {
+public class  Scoreboard {
     private HashMap<String, String> stats = new HashMap<>();
 
     public Scoreboard() {

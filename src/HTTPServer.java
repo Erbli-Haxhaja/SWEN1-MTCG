@@ -47,6 +47,9 @@ public class HTTPServer {
         // Create a context for the "/stats" path and set a handler for scoreboard
         server.createContext("/stats", new StatsHandler());
 
+        // Create a context for the "/battle" path and set a handler for Battle
+        server.createContext("/battle", new BattleHandler());
+
         // Set the executor to null for simplicity (default executor is used)
         server.setExecutor(null);
 

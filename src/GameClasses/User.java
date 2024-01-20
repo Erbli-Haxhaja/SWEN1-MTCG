@@ -6,6 +6,9 @@ public class User {
     private String password;
     private int elo = 100;
     private boolean configrured = false;
+    private int wins = 0;
+    private int draws = 0;
+    private int losses = 0;
 
     private int coins = 20;
     private ArrayList<Card> deck = new ArrayList<>();
@@ -81,6 +84,30 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public int getDraws() {
+        return draws;
+    }
+
+    public void setDraws(int draws) {
+        this.draws = draws;
+    }
+
+    public int getLosses() {
+        return losses;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
     }
 
     public void unconfiguredDeck() {

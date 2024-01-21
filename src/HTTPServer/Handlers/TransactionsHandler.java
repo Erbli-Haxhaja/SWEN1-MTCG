@@ -6,14 +6,9 @@ import GameClasses.Gameworld;
 import HTTPServer.Utils.ExtractUsername;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.apache.commons.lang3.tuple.Triple;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +19,7 @@ public class TransactionsHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
 
-        if ("POST".equals(exchange.getRequestMethod()) || "GET".equals(exchange.getRequestMethod())) {
+        if ("POST".equals(exchange.getRequestMethod())) {
             //declare the client response
             String response = "";
             // Get the headers from the request
@@ -78,7 +73,7 @@ public class TransactionsHandler implements HttpHandler {
                                     database.insert(query);
                                 }
                                 // Set the response
-                                response = "Package" + Gameworld.packageFirstId + " accuired for " + username + "!";
+                                response = "Package" + Gameworld.packageFirstId + " acquired for " + username + "!";
                                 // Add 1 to the packageFirstId Variable, so that the next package acquire the next package is acquired
                                 Gameworld.packageFirstId++;
                                 // Remove 5 coins from the user
@@ -98,13 +93,14 @@ public class TransactionsHandler implements HttpHandler {
             else {
                 response = "Invalid! No token!";
             }
-            // Get the input stream from the request
-            InputStream requestBody = exchange.getRequestBody();
 
             // Send the response back to the client
             exchange.sendResponseHeaders(200, response.length());
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
+                // Close the output stream and the exchange
+                os.close();
+                exchange.close();
             }
         }
     }

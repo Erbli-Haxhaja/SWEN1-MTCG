@@ -62,7 +62,7 @@ public class SessionHandler implements HttpHandler {
                     response.append("\n").append("Login successful!");
                     Gameworld.users.add(createUser(username, password));
                 } else {
-                    response.append("\n").append("Login unsuccessful!").append("\nCheck your credentials!");
+                    response.append("\n").append("Login unsuccessful!");
                 }
 
             } catch (Exception ex) {

@@ -1,14 +1,9 @@
 package HTTPServer.Handlers;
 import Database.DatabaseInitializer;
-import GameClasses.Gameworld;
-import GameClasses.User;
 import HTTPServer.Utils.ExtractUsername;
 import HTTPServer.Utils.UserJsonUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
@@ -19,6 +14,7 @@ import java.util.regex.Pattern;
 
 // Custom handler for the "/user" path
 public class UserHandler implements HttpHandler {
+
     DatabaseInitializer database = new DatabaseInitializer("MonsterTradingCards", "postgres", "eeeeeeee");
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -113,12 +109,12 @@ public class UserHandler implements HttpHandler {
         // Here the data of the user is printed
         else if("GET".equals(exchange.getRequestMethod())) {
             if(isToken && tokenUsername.equals(subUsername)) {
-                response.append(subUsername + " data:");
                 List<String> userData = database.getDataFromUserTable(subUsername);
                 if(userData.get(1) == null) {
                     response.append("\nNo data for " + subUsername + " yet!");
                 }
                 else {
+                    response.append(subUsername + " data:");
                     response.append("\nName: " + userData.get(0) + " | Bio: " + userData.get(1) + " | Image: " + userData.get(2));
                 }
             }

@@ -7,7 +7,6 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +82,8 @@ public class BattleHandler implements HttpHandler {
             exchange.sendResponseHeaders(200, response.length());
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.toString().getBytes());
+                os.close();
+                exchange.close();
             }
         }
     }

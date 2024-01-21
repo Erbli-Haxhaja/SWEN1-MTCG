@@ -63,6 +63,8 @@ public class ScoreboardHandler implements HttpHandler {
             exchange.sendResponseHeaders(200, response.length());
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.toString().getBytes());
+                os.close();
+                exchange.close();
             }
         }
     }

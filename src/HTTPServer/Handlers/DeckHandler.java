@@ -123,6 +123,8 @@ public class DeckHandler implements HttpHandler {
         // Send the response back to the client
         exchange.sendResponseHeaders(200, response.length());
         os.write(response.toString().getBytes());
+        os.close();
+        exchange.close();
     }
 
     public ArrayList<String> jsonToArrayList(String jsonData) {

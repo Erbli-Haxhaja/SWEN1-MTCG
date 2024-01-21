@@ -1,8 +1,6 @@
 package HTTPServer.Handlers;
 
 import Database.DatabaseInitializer;
-import GameClasses.Card;
-import GameClasses.Gameworld;
 import HTTPServer.Utils.ExtractUsername;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -73,6 +71,8 @@ public class EditUserData implements HttpHandler {
         // Send the response back to the client
         exchange.sendResponseHeaders(200, response.length());
         os.write(response.toString().getBytes());
+        os.close();
+        exchange.close();
     }
 
     public ArrayList<String> jsonToArrayList(String jsonData) {

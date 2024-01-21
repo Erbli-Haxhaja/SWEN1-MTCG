@@ -1,11 +1,8 @@
 import Database.DatabaseInitializer;
-import GameClasses.*;
 import HTTPServer.Handlers.*;
 import com.sun.net.httpserver.HttpServer;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.*;
 
 public class HTTPServer {
 
@@ -44,11 +41,11 @@ public class HTTPServer {
         // Create a context for the "/scoreboard" path and set a handler for scoreboard
         server.createContext("/scoreboard", new ScoreboardHandler());
 
-        // Create a context for the "/stats" path and set a handler for scoreboard
+        // Create a context for the "/stats" path and set a handler for stats
         server.createContext("/stats", new StatsHandler());
 
         // Create a context for the "/battle" path and set a handler for Battle
-        server.createContext("/battle", new BattleHandler());
+        server.createContext("/battles", new BattleHandler());
 
         // Set the executor to null for simplicity (default executor is used)
         server.setExecutor(null);

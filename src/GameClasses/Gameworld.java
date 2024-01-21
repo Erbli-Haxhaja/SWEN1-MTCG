@@ -150,7 +150,7 @@ public class Gameworld implements Runnable{
         }
         // In case of draw
         if (roundCount == 100) {
-            this.log += "\n100 Rounds were reached with no winner! ==>> DRAW!";
+            this.log += "\n100 Rounds were reached with no winner! ==>> DRAW!\n";
         }
 
         // Database Stats and Scoreboard Update

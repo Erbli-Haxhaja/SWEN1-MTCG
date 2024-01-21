@@ -12,12 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 // Custom handler for the "/packages" path
@@ -107,6 +103,10 @@ public class PackageHandler implements HttpHandler {
             }
             else {
                 response.append("Only admin can add packages!");
+                os.write(response.toString().getBytes());
+                // Close the output stream and the exchange
+                os.close();
+                exchange.close();
             }
 
             if(insertionStatus)
